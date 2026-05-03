@@ -6,6 +6,8 @@ import (
 	"crypto/subtle"
 	"encoding/binary"
 	"errors"
+
+	"github.com/lukechampine/fastxor"
 )
 
 const (
@@ -353,27 +355,9 @@ func (g *aesGEM) applySegmentedCTR(
 // ctr32XOR applies AES-CTR with a 32-bit big-endian counter (last 4 bytes
 // of the 16-byte IV). Go's crypto/cipher.NewCTR increments the full block,
 // so we implement 32-bit CTR manually.
-func ctr32XOR(
-	block cipher.Block, iv [blockSize]byte, data []byte,
-) {
-	var counter [blockSize]byte
-	copy(counter[:], iv[:])
-	var ks [blockSize]byte
-
-	for len(data) > 0 {
-		block.Encrypt(ks[:], counter[:])
-		n := blockSize
-		if len(data) < n {
-			n = len(data)
-		}
-		xorBytes(data[:n], data[:n], ks[:n])
-		data = data[n:]
-
-		// Increment only the last 4 bytes.
-		c := binary.BigEndian.Uint32(counter[12:])
-		c++
-		binary.BigEndian.PutUint32(counter[12:], c)
-	}
+func ctr32XOR(block cipher.Block, iv [blockSize]byte, data []byte) {
+	stream := cipher.NewCTR(block, iv[:])
+	stream.XORKeyStream(data, data)
 }
 
 // --- Authentication tag ---
@@ -406,15 +390,11 @@ func computeTag(
 // --- Helpers ---
 
 func xorBlock(dst, src *[blockSize]byte) {
-	for i := range dst {
-		dst[i] ^= src[i]
-	}
+	fastxor.Block(dst[:], src[:], dst[:])
 }
 
 func xorBytes(dst, a, b []byte) {
-	for i := range dst {
-		dst[i] = a[i] ^ b[i]
-	}
+	fastxor.Bytes(dst[:], a[:], b[:])
 }
 
 // sliceForAppend extends dst by n bytes, reusing capacity when possible.

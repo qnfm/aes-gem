@@ -1,3 +1,7 @@
+github.com/lukechampine/fastxor v0.0.0-20210322201628-b664bed5a5cc h1:P5ymLbODejVbeR9o+TCXMmxHhiCfpqWhEFcm5EF6Y0A=
+github.com/lukechampine/fastxor v0.0.0-20210322201628-b664bed5a5cc/go.mod h1:iR9Fx69P39Bc9zw/hAK0y2lc0uGUxSnpqBBDZzjeMxI=
 gitlab.com/yawning/bsaes.git v0.0.0-20190805113838-0a714cd429ec h1:FpfFs4EhNehiVfzQttTuxanPIT43FtkkCFypIod8LHo=
 gitlab.com/yawning/bsaes.git v0.0.0-20190805113838-0a714cd429ec/go.mod h1:BZ1RAoRPbCxum9Grlv5aeksu2H8BiKehBYooU2LFiOQ=
 golang.org/x/sys v0.0.0-20190804053845-51ab0e2deafa/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.43.0 h1:Rlag2XtaFTxp19wS8MXlJwTvoh8ArU6ezoyFsMyCTNI=
+golang.org/x/sys v0.43.0/go.mod h1:4GL1E5IUh+htKOUEOaiffhrAeqysfVGipDYzABqnCmw=

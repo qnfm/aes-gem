@@ -6,8 +6,6 @@
 // GHASH API in crypto/cipher or golang.org/x/crypto.
 package gem
 
-import bsg "gitlab.com/yawning/bsaes.git/ghash"
-
 const blockSize = 16
 
 // ghash implements GHASH: a universal hash over GF(2^128).
@@ -22,7 +20,8 @@ func newGHash(h [blockSize]byte) *ghash {
 
 // update XORs a full 16-byte block into the state and multiplies by H.
 func (g *ghash) update(block [blockSize]byte) {
-	bsg.Ghash(&g.state, &g.h, block[:])
+	ghashUpdate(&g.state, &g.h, block[:])
+	//	bsg.Ghash(&g.state, &g.h, block[:])
 }
 
 // updatePadded processes arbitrary-length data, zero-padding the final
@@ -31,13 +30,13 @@ func (g *ghash) updatePadded(data []byte) {
 	full := len(data) &^ (blockSize - 1)
 
 	if full > 0 {
-		bsg.Ghash(&g.state, &g.h, data[:full])
+		ghashUpdate(&g.state, &g.h, data[:full])
 	}
 
 	if full < len(data) {
 		var block [blockSize]byte
 		copy(block[:], data[full:])
-		bsg.Ghash(&g.state, &g.h, block[:])
+		ghashUpdate(&g.state, &g.h, block[:])
 	}
 }
 

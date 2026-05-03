@@ -103,6 +103,36 @@ func benchAESGEM256Open(b *testing.B, size int) {
 	}
 }
 
+func TestGHASHBackendMatchesGeneric(t *testing.T) {
+	var h [16]byte
+	var y1 [16]byte
+	var y2 [16]byte
+
+	for i := range h {
+		h[i] = byte(i*17 + 3)
+	}
+	for i := range y1 {
+		y1[i] = byte(i*11 + 7)
+		y2[i] = y1[i]
+	}
+
+	sizes := []int{0, 16, 32, 64, 256, 4096}
+
+	for _, size := range sizes {
+		data := make([]byte, size)
+		for i := range data {
+			data[i] = byte(i*13 + 9)
+		}
+
+		y1 = [16]byte{}
+		y2 = [16]byte{}
+
+		ghashUpdate(&y1, &h, data)
+		ghashUpdate(&y2, &h, data)
+
+	}
+}
+
 func BenchmarkAESGEM256Seal4K(b *testing.B)   { benchAESGEM256Seal(b, 4<<10) }
 func BenchmarkAESGEM256Seal16K(b *testing.B)  { benchAESGEM256Seal(b, 16<<10) }
 func BenchmarkAESGEM256Seal64K(b *testing.B)  { benchAESGEM256Seal(b, 64<<10) }
