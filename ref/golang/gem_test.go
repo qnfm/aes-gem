@@ -5,6 +5,8 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"testing"
+
+	bsg "gitlab.com/yawning/bsaes.git/ghash"
 )
 
 func TestAES256RoundTrip(t *testing.T) {
@@ -638,4 +640,10 @@ func randBytes(t *testing.T, n int) []byte {
 		t.Fatal(err)
 	}
 	return b
+}
+
+func gfMul(x, y *[blockSize]byte) [blockSize]byte {
+	var z [blockSize]byte
+	bsg.Ghash(&z, y, x[:])
+	return z
 }

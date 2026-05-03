@@ -196,12 +196,12 @@ func (g *aesGEM) deriveSubKey256(head []byte) cipher.Block {
 	g.cipher.Encrypt(b1[:], b1[:])
 
 	// subkey = (b0 || b1) XOR K
-	sk := make([]byte, 32)
+	var sk [32]byte
 	copy(sk[:16], b0[:])
 	copy(sk[16:], b1[:])
-	xorBytes(sk, sk, g.key)
+	xorBytes(sk[:], sk[:], g.key)
 
-	c, _ := aes.NewCipher(sk)
+	c, _ := aes.NewCipher(sk[:])
 	return c
 }
 
@@ -223,10 +223,10 @@ func (g *aesGEM) deriveSubKey128(head []byte) cipher.Block {
 	g.cipher.Encrypt(block[:], block[:])
 
 	// subkey = b XOR K
-	sk := make([]byte, 16)
-	xorBytes(sk, block[:], g.key)
+	var sk [16]byte
+	xorBytes(sk[:], block[:], g.key)
 
-	c, _ := aes.NewCipher(sk)
+	c, _ := aes.NewCipher(sk[:])
 	return c
 }
 
@@ -260,10 +260,10 @@ func deriveSegmentKey256(
 	binary.BigEndian.PutUint64(b1[8:], segKeyBase+2*i+1)
 	subkey.Encrypt(b1[:], b1[:])
 
-	sk := make([]byte, 32)
+	var sk [32]byte
 	copy(sk[:16], b0[:])
 	copy(sk[16:], b1[:])
-	c, _ := aes.NewCipher(sk)
+	c, _ := aes.NewCipher(sk[:])
 	return c
 }
 
