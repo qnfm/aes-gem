@@ -2,11 +2,15 @@
 
 package gem
 
-import "golang.org/x/sys/cpu"
+import (
+	"log"
+
+	"golang.org/x/sys/cpu"
+)
 
 func ghashUpdate(y, h *[blockSize]byte, data []byte) {
 	if len(data)%blockSize != 0 {
-		panic("ghashUpdate: data length must be multiple of 16")
+		log.Panic("ghashUpdate: data length must be multiple of 16")
 	}
 	if len(data) == 0 {
 		return

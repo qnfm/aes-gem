@@ -6,6 +6,7 @@ import (
 	"crypto/subtle"
 	"encoding/binary"
 	"errors"
+	"log"
 
 	"github.com/lukechampine/fastxor"
 )
@@ -93,7 +94,7 @@ func (g *aesGEM) Seal(
 	dst, nonce, plaintext, aad []byte,
 ) []byte {
 	if len(nonce) != g.NonceSize() {
-		panic("gem: incorrect nonce length")
+		log.Panic("gem: incorrect nonce length")
 	}
 	ret, out := sliceForAppend(dst, len(plaintext)+g.tagSize)
 	ct := out[:len(plaintext)]
@@ -109,7 +110,7 @@ func (g *aesGEM) Open(
 	dst, nonce, ciphertext, aad []byte,
 ) ([]byte, error) {
 	if len(nonce) != g.NonceSize() {
-		panic("gem: incorrect nonce length")
+		log.Panic("gem: incorrect nonce length")
 	}
 	if len(ciphertext) < g.tagSize {
 		return nil, errAuthFailed
